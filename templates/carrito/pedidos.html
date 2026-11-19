@@ -5,19 +5,35 @@
 {% block contenido %}
     <p class="eyebrow">MI CUENTA</p>
     <h1>Mis compras</h1>
-    <div class="panel card">
+    <div class="grilla compras-grilla">
         {% for pedido in pedidos %}
-            <a class="fila pedido" href="{% url 'detalle_pedido' pedido.pk %}">
-                <div>
-                    <h3>Pedido #{{ pedido.pk }}</h3>
-                    <span>{{ pedido.fecha|date:'d/m/Y H:i' }}</span>
+            <article class="panel card compra-card">
+                <div class="compra-cabecera">
+                    <div>
+                        <h2>Pedido #{{ pedido.pk }}</h2>
+                        <p class="muted">{{ pedido.fecha|date:'d/m/Y H:i' }}</p>
+                    </div>
+                    <strong>${{ pedido.total|floatformat:2 }}</strong>
                 </div>
-                <span class="etiqueta badge">{{ pedido.estado }}</span>
-                <strong>${{ pedido.total|floatformat:2 }} →</strong>
-            </a>
+                <div class="compra-seccion">
+                    <p class="etiqueta-campo">Estado del pedido</p>
+                    <p>{{ pedido.estado }}</p>
+                </div>
+                <div class="compra-seccion">
+                    <p class="etiqueta-campo">Estado del envío</p>
+                    {% if pedido.envio %}
+                        <span class="estado-envio estado-envio--{{ pedido.envio.clase_estado }}">{{ pedido.envio.estado }}</span>
+                        {% if pedido.envio.empresa_transporte %}<p class="dato-envio">{{ pedido.envio.empresa_transporte }}</p>{% endif %}
+                        {% if pedido.envio.numero_seguimiento %}<p class="dato-envio">Seguimiento: <strong>{{ pedido.envio.numero_seguimiento }}</strong></p>{% endif %}
+                    {% else %}
+                        <span class="estado-envio estado-envio--sin-envio">Envío aún no generado</span>
+                    {% endif %}
+                </div>
+                <a class="btn btn-outline-primary"
+                   href="{% url 'detalle_pedido' pedido.pk %}">Ver detalle de la compra</a>
+            </article>
         {% empty %}
-            <p>Todavía no realizaste compras.</p>
-            <a href="{% url 'listado_categorias' %}">Explorar categorías →</a>
+            <div class="panel card"><p>Todavía no realizaste compras.</p><a href="{% url 'listado_categorias' %}">Explorar categorías →</a></div>
         {% endfor %}
     </div>
 {% endblock %}

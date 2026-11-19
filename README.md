@@ -60,3 +60,11 @@ python manage.py test --noinput
 ```
 
 Las pruebas usan una base temporal independiente. El proyecto está configurado para desarrollo académico local, no para un despliegue público de producción. Publicar el código en GitHub no publica la tienda ni su base de datos.
+
+## Envíos y seguimiento
+
+Después de confirmar el pago, el administrador puede generar el envío desde el bloque Envío de un pedido en `/admin/pedidos/pedido/` o desde `/admin/envios/envio/add/`. Solo se ofrecen pedidos pagados que todavía no tienen envío. El estado inicial es En preparación y se puede actualizar a En tránsito, Pendiente de entrega o Entregado. Puede cargarse transportista, número de seguimiento y fechas.
+
+El comprador ve una card por compra en Mis compras con su identificador y el estado del envío. Si todavía no se generó, aparece Envío aún no generado. El detalle también muestra los datos de seguimiento disponibles. El cliente no puede editar envíos ni consultar compras ajenas. El costo del envío en Admin es un registro logístico y no modifica un pedido ya cobrado.
+
+La migración `envios.0002_estados_envio` crea los cuatro estados y adapta el antiguo estado pendiente a En preparación sin eliminar envíos existentes.

@@ -108,7 +108,7 @@ def mis_pedidos(request):
         "carrito/pedidos.html",
         {
             "pedidos": Pedido.objects.filter(usuario=request.user)
-            .select_related("estado")
+            .select_related("estado", "envio__estado")
             .order_by("-fecha")
         },
     )
@@ -117,7 +117,9 @@ def mis_pedidos(request):
 @login_required
 def detalle_pedido(request, pedido_id):
     pedido = get_object_or_404(
-        Pedido.objects.select_related("estado"), pk=pedido_id, usuario=request.user
+        Pedido.objects.select_related("estado", "envio__estado"),
+        pk=pedido_id,
+        usuario=request.user,
     )
     return render(
         request,

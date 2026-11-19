@@ -59,4 +59,18 @@
             {% endif %}
         </aside>
     </div>
+    <section class="panel card seguimiento-card" aria-labelledby="titulo-envio">
+        <h2 id="titulo-envio">Envío del pedido #{{ pedido.pk }}</h2>
+        {% if pedido.envio %}
+            <p><span class="estado-envio estado-envio--{{ pedido.envio.clase_estado }}">{{ pedido.envio.estado }}</span></p>
+            <dl class="datos-seguimiento">
+                {% if pedido.envio.empresa_transporte %}<div><dt>Empresa de transporte</dt><dd>{{ pedido.envio.empresa_transporte }}</dd></div>{% endif %}
+                {% if pedido.envio.numero_seguimiento %}<div><dt>Número de seguimiento</dt><dd>{{ pedido.envio.numero_seguimiento }}</dd></div>{% endif %}
+                {% if pedido.envio.fecha_envio %}<div><dt>Fecha de envío</dt><dd>{{ pedido.envio.fecha_envio|date:'d/m/Y H:i' }}</dd></div>{% endif %}
+                {% if pedido.envio.fecha_entrega %}<div><dt>Fecha de entrega</dt><dd>{{ pedido.envio.fecha_entrega|date:'d/m/Y H:i' }}</dd></div>{% endif %}
+            </dl>
+        {% else %}
+            <p class="muted">Envío aún no generado</p>
+        {% endif %}
+    </section>
 {% endblock %}

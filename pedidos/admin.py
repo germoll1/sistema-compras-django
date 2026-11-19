@@ -1,5 +1,6 @@
 from django.contrib import admin
 from pagos.models import Pago
+from envios.admin import EnvioInline
 from .models import Pedido, DetallePedido, EstadoPedido
 
 
@@ -38,7 +39,7 @@ class PedidoAdmin(admin.ModelAdmin):
         "total",
         "direccion_entrega",
     )
-    inlines = [DetallePedidoInline, PagoInline]
+    inlines = [DetallePedidoInline, PagoInline, EnvioInline]
 
     def has_add_permission(self, request):
         return False
