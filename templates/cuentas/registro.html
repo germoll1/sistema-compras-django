@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block main_class %}pagina-formulario{% endblock %}
+{% block volver_url %}
+    {% url 'login' %}
+{% endblock %}
+{% block contenido %}
+    <section class="panel card formulario">
+        <h1>Crear cuenta</h1>
+        <p class="descripcion-formulario">Completá tus datos para registrarte.</p>
+        <form method="post">
+            {% csrf_token %}
+            {% if formulario.non_field_errors %}<div class="alert alert-danger">{{ formulario.non_field_errors }}</div>{% endif %}
+            {% for field in formulario %}
+                <div class="campo-formulario">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}<div class="ayuda-campo"
+                                                 id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</div>{% endif %}
+                    {% if field.errors %}<div class="errores-campo">{{ field.errors }}</div>{% endif %}
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary w-100" type="submit">Registrarme</button>
+        </form>
+        <div class="acciones-secundarias"><a class="btn btn-outline-primary btn-sm"
+                                             href="{% url 'login' %}">Iniciar sesión</a></div>
+    </section>
+{% endblock %}

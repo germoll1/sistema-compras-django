@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block volver_url %}
+    {% url 'listado_categorias' %}
+{% endblock %}
+{% block contenido %}
+    <p class="eyebrow">TU SELECCIÓN</p>
+    <h1>Mi carrito</h1>
+    {% if items_carrito %}
+        <div class="panel card">
+            {% for item in items_carrito %}
+                <div class="fila">
+                    <div>
+                        <h3>{{ item.producto.nombre }}</h3>
+                        <p>{{ item.cantidad }} × ${{ item.producto.precio|floatformat:2 }}</p>
+                    </div>
+                    <div class="text-end">
+                        <strong>${{ item.subtotal|floatformat:2 }}</strong>
+                        <form class="mt-3"
+                              method="post"
+                              action="{% url 'eliminar_del_carrito' item.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger btn-sm"
+                                    type="submit"
+                                    aria-label="Eliminar {{ item.producto.nombre }} del carrito">
+                                Eliminar producto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="fila">
+                <h2>Total</h2>
+                <h2>${{ total|floatformat:2 }}</h2>
+            </div>
+            <a class="boton btn btn-primary" href="{% url 'checkout' %}">Continuar al checkout →</a>
+        </div>
+    {% else %}
+        <div class="panel card">
+            <h2>Tu carrito está vacío</h2>
+            <p>Descubrí los productos de nuestras categorías.</p>
+        </div>
+    {% endif %}
+    <a class="boton secundario btn btn-outline-secondary"
+       href="{% url 'listado_categorias' %}">Seguir comprando</a>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block navegacion_volver %}{% endblock %}
+{% block main_class %}pagina-formulario{% endblock %}
+{% block cabecera %}{% endblock %}
+{% block contenido %}
+    <section class="panel card formulario acceso-login">
+        <div class="contenido-formulario">
+            <h1>Iniciar sesión</h1>
+            <p class="text-secondary">Ingresá tus datos para acceder a tu cuenta.</p>
+            <form method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+                {% for field in form %}
+                    <div class="mb-4">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+                {% endfor %}
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+                <button class="btn btn-primary w-100" type="submit">Ingresar</button>
+            </form>
+            <div class="acciones-secundarias">
+                <a class="btn btn-outline-primary btn-sm" href="{% url 'registro' %}">Registrarse</a>
+            </div>
+            <a class="enlace-admin d-inline-block" href="{% url 'admin:index' %}">Acceso administración</a>
+        </div>
+    </section>
+{% endblock %}

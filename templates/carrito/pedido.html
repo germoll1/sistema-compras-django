@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block volver_url %}
+    {% url 'mis_pedidos' %}
+{% endblock %}
+{% block contenido %}
+    <a href="{% url 'mis_pedidos' %}">← Mis compras</a>
+    <p class="eyebrow">DETALLE DE COMPRA</p>
+    <h1>Pedido #{{ pedido.pk }}</h1>
+    <div class="checkout">
+        <section class="panel card">
+            <span class="etiqueta badge">{{ pedido.estado }}</span>
+            {% for item in pedido.detalles.all %}
+                <div class="fila">
+                    <span>{{ item.producto.nombre }} × {{ item.cantidad }}</span>
+                    <strong>${{ item.subtotal|floatformat:2 }}</strong>
+                </div>
+            {% endfor %}
+            <h2>Total ${{ pedido.total|floatformat:2 }}</h2>
+            <h3>Entrega</h3>
+            <p>
+                {{ pedido.direccion_entrega.calle }} {{ pedido.direccion_entrega.numero }} {{ pedido.direccion_entrega.piso }} {{ pedido.direccion_entrega.departamento }}
+                <br>
+                {{ pedido.direccion_entrega.ciudad }}, {{ pedido.direccion_entrega.provincia }} · {{ pedido.direccion_entrega.codigo_postal }}
+            </p>
+        </section>
+        <aside class="panel card">
+            <h2>{{ pago.get_medio_pago_display }}</h2>
+            <p>
+                Estado del pago:
+                <strong>{{ pago.get_estado_display }}</strong>
+            </p>
+            {% if pago.estado == "aprobado" %}
+                <div class="aviso">Pago confirmado. ¡Gracias por tu compra!</div>
+            {% elif pago.medio_pago == "transferencia" %}
+                <p>
+                    Transferí
+                    <strong>${{ pedido.total|floatformat:2 }}</strong>
+                    al alias:
+                </p>
+                <div class="alias">{{ alias }}</div>
+                <p>
+                    Enviá el comprobante a
+                    <strong>{{ email_comprobante }}</strong>
+                    e indicá el
+                    <strong>pedido #{{ pedido.pk }}</strong>
+                    .
+                </p>
+                <p class="muted">
+                    Alias y correo de fantasía para demostración. No realices una transferencia real. El administrador confirmará el pago después de revisar el comprobante.
+                </p>
+            {% elif pago.medio_pago == "mercadopago" and pago.estado != "reembolsado" %}
+                <p>
+                    Continuá a Mercado Pago para abonar. El estado se actualiza cuando recibimos la confirmación verificada.
+                </p>
+                <form method="post" action="{% url 'iniciar_pago' pedido.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" type="submit">Pagar con Mercado Pago ↗</button>
+                </form>
+            {% endif %}
+        </aside>
+    </div>
+{% endblock %}

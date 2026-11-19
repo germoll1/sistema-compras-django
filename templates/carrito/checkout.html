@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block main_class %}pagina-formulario{% endblock %}
+{% block volver_url %}
+    {% url 'ver_carrito' %}
+{% endblock %}
+{% block contenido %}
+    <div class="columna-checkout">
+        <section class="panel card formulario">
+            <h1>Confirmar compra</h1>
+            <p class="descripcion-formulario">Dirección de entrega y medio de pago.</p>
+            <form method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                {% for field in form %}
+                    <div class="campo-formulario">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}<div class="ayuda-campo"
+                                                     id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</div>{% endif %}
+                        {% if field.errors %}<div class="errores-campo">{{ field.errors }}</div>{% endif %}
+                    </div>
+                {% endfor %}
+                <p class="ayuda-campo">Envío sin cargo. Revisá los datos antes de confirmar.</p>
+                <button class="btn btn-primary w-100"
+                        type="submit">Confirmar pedido · ${{ total|floatformat:2 }}</button>
+            </form>
+        </section>
+        <aside class="panel card resumen-compra">
+            <h2>Resumen de compra</h2>
+            {% for item in items %}
+                <div class="fila"><span>{{ item.producto.nombre }} × {{ item.cantidad }}</span><span>${{ item.producto.precio|floatformat:2 }} c/u</span></div>
+            {% endfor %}
+            <div class="fila total-compra"><span>Total</span><strong>${{ total|floatformat:2 }}</strong></div>
+            <p class="ayuda-campo">El pago queda pendiente hasta su verificación.</p>
+        </aside>
+    </div>
+{% endblock %}

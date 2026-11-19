@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block volver_url %}
+    {% url 'listado_categorias' %}
+{% endblock %}
+{% block contenido %}
+    <p class="eyebrow">MI CUENTA</p>
+    <h1>Mis compras</h1>
+    <div class="panel card">
+        {% for pedido in pedidos %}
+            <a class="fila pedido" href="{% url 'detalle_pedido' pedido.pk %}">
+                <div>
+                    <h3>Pedido #{{ pedido.pk }}</h3>
+                    <span>{{ pedido.fecha|date:'d/m/Y H:i' }}</span>
+                </div>
+                <span class="etiqueta badge">{{ pedido.estado }}</span>
+                <strong>${{ pedido.total|floatformat:2 }} →</strong>
+            </a>
+        {% empty %}
+            <p>Todavía no realizaste compras.</p>
+            <a href="{% url 'listado_categorias' %}">Explorar categorías →</a>
+        {% endfor %}
+    </div>
+{% endblock %}

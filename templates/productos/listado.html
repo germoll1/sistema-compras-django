@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block volver_url %}
+    {% url 'listado_categorias' %}
+{% endblock %}
+{% block contenido %}
+    <a href="{% url 'listado_categorias' %}">← Categorías</a>
+    <p class="eyebrow">CATÁLOGO</p>
+    <h1>{{ categoria.nombre|default:'Todos los productos' }}</h1>
+    <form hidden>
+        {% csrf_token %}
+    </form>
+    <section id="resultado-carrito" class="alert alert-success" hidden>
+        <p id="estado-carrito" class="mb-3" role="status" aria-live="polite"></p>
+        <a class="btn btn-primary" href="{% url 'ver_carrito' %}">Ver carrito →</a>
+    </section>
+    <div class="grilla">
+        {% for producto in productos %}
+            <article class="tarjeta card">
+                <p class="eyebrow">{{ producto.categoria.nombre }}</p>
+                <h2>{{ producto.nombre }}</h2>
+                <p>{{ producto.descripcion }}</p>
+                <div class="precio">${{ producto.precio|floatformat:2 }}</div>
+                <p class="muted">{{ producto.stock }} unidades disponibles</p>
+                {% if producto.stock > 0 %}
+                    <button type="button"
+                            class="btn-agregar btn btn-primary"
+                            data-url="{% url 'agregar_al_carrito' producto.pk %}">Agregar al carrito +</button>
+                {% else %}
+                    <span class="etiqueta badge">Sin stock</span>
+                {% endif %}
+            </article>
+        {% empty %}
+            <div class="panel card">No hay productos disponibles en esta categoría.</div>
+        {% endfor %}
+    </div>
+{% endblock %}

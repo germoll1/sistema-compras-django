@@ -1,0 +1,37 @@
+# Credenciales y configuración privada
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python y entornos virtuales
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Bases, respaldos y datos de usuarios
+*.sqlite3
+*.sqlite3-*
+*.sql
+*.sql.gz
+*.dump
+base_datos*.json
+backup*/
+backups/
+media/
+
+# Archivos generados y de desarrollo
+.vscode/
+.idea/
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+staticfiles/
+Thumbs.db
+.DS_Store
